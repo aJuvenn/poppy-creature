@@ -9,6 +9,11 @@ class InterpolationFunction:
     
     @classmethod     
     def cubic(cls, t1, t2, x1, x2):
+        """
+            Returns a list of coefficient corresponding
+            to a polynomial P such as P(t1) = x1, P(t2) = x2
+            and P'(t1) = P'(t2) = 0
+        """
     
         A = np.matrix([[t1**3, t1**2, t1, 1],
                        [t2**3, t2**2, t2, 1],
@@ -21,7 +26,12 @@ class InterpolationFunction:
     
 
     def __init__(self, ts, xs):
-    
+        """
+            Creates a new interpolation function f such as f(ts[i]) = xs[i]
+            and f'(ts[i]) = 0. 
+            Requirements : 2 <= len(ts) <= len(xs) and ts is sorted
+        """
+        
         self.ts = ts
         self.xs = xs
         self.polynomials = []
@@ -31,7 +41,10 @@ class InterpolationFunction:
 
 
     def __call__(self, t):
-        
+        """
+            Computes the value of interpolation function at value t
+        """
+
         t_index = 0
         
         while t_index+1 < len(self.polynomials) and self.ts[t_index+1] < t:
@@ -41,6 +54,7 @@ class InterpolationFunction:
         
     
     def plot(self, eps = 0.01):
+        
         fig, ax = plt.subplots(figsize=(6.5, 4))
         ax.plot(self.ts, self.xs, 'o')
         min_t = min(self.ts)

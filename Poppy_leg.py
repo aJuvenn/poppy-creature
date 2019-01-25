@@ -4,8 +4,9 @@
 import numpy as np
 
 
-def secure_arccos(c):
 
+def secure_arccos(c):
+    
     if c > 1.:
         print("Value too high !")
         return 0.
@@ -20,11 +21,13 @@ def radian_to_degree(theta):
     return theta * 180. / np.pi
 
 
-class Poppy_leg:
+class PoppyLeg:
     
     R = 0.5
     L = 0.9
     D = 1.5
+    L_squared = L * L
+    D_squared = D * D
     
     def __init__(self, motors):
         self.theta = 0.
@@ -48,20 +51,18 @@ class Poppy_leg:
         theta = np.arctan2(y, x)
     
         Radius_xy = np.sqrt(x*x + y*y)
-        delta_radius = Radius_xy - self.R
+        delta_radius = Radius_xy - PoppyLeg.R
         K_squared = delta_radius**2 + z**2
         
         K = np.sqrt(K_squared)
-        L_squared = self.L ** 2
-        D_squared = self.D ** 2
-
-        psi = - secure_arccos((K_squared - L_squared - D_squared) / (2. * L_squared * D_squared))
+        
+        psi = - secure_arccos((K_squared - PoppyLeg.L_squared - PoppyLeg.D_squared) / (2. * PoppyLeg.L_squared * PoppyLeg.D_squared))
 
         if (K == 0.):
             return [theta, 0., psi]
         
         alpha = np.arctan2(z, delta_radius)
-        beta = secure_arccos((K_squared + L_squared - D_squared)/(2. * K * self.L))
+        beta = secure_arccos((K_squared + PoppyLeg.L_squared - PoppyLeg.D_squared)/(2. * K * PoppyLeg.L))
         phi = alpha + beta
         
         return [theta, phi, psi]
@@ -115,7 +116,7 @@ class Poppy_leg:
         
         
 if __name__ == "__main__":
-    x = Poppy_leg([0,0,0])
+    x = PoppyLeg([0,0,0])
     
     test_MGD_array = [
             
