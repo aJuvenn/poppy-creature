@@ -6,270 +6,160 @@ Created on Tue Jan 22 09:37:33 2019
 @author: ajuvenn
 """
 
-from scipy.interpolate import CubicSpline
-import matplotlib.pyplot as plt
-import numpy as np
 
-x = 2.*3.1415*np.arange(11)/10.
-y = np.sin(x)
-cs = CubicSpline(x, y)
-xs = np.arange(-0.5, 9.6, 0.1)
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(x, y, 'o', label='data')
-ax.plot(xs, np.sin(xs), label='true')
-ax.plot(xs, cs(xs), label="S")
-ax.plot(xs, cs(xs, 1), label="S'")
-ax.plot(xs, cs(xs, 2), label="S''")
-ax.plot(xs, cs(xs, 3), label="S'''")
-ax.set_xlim(-0.5, 2.*3.1415)
-ax.legend(loc='lower left', ncol=2)
-plt.show()
-
-
-
-
-T = 1.
-
-times = [0., 3.*T/4., 7.*T/8., T]
-
-xy_forward = 2.
-xy_backward = 1.
-xy_points = [xy_forward, xy_backward, 0.5*(xy_forward + xy_backward), xy_forward]
-
-z_up = 10.
-z_down = 0.
-z_points = [z_down, z_down, z_up, z_down]
-
-cs_xy = CubicSpline(times, xy_points)
-cs_z = CubicSpline(times, z_points)
-
-
-ts = np.arange(0., T, 0.01)
-xy = cs_xy(ts)
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, xy_points, 'o')
-ax.plot(ts, xy)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-z = cs_z(ts)
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, z_points, 'o')
-ax.plot(ts, z)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(xy_points, z_points,  'o', label='data')
-ax.plot(xy, z, 'x')
-ax.set_xlim(0.5, 2.5)
-plt.show()
-
-###
-
-
-
-T = 1.
-
-times = [0., 3.*T/4., 7.*T/8., T]
-
-xy_forward = 2.
-xy_backward = 1.
-xy_points = [xy_forward, xy_backward, 0.5*(xy_forward + xy_backward), xy_forward]
-
-z_up = 10.
-z_down = 0.
-z_points = [z_down, z_down, z_up, z_down]
-
-cs_xy = CubicSpline(times, xy_points)
-cs_z = CubicSpline(times, z_points)
-
-
-ts = np.arange(0., T, 0.01)
-xy = cs_xy(ts)
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, xy_points, 'o')
-ax.plot(ts, xy)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-z = cs_z(ts)
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, z_points, 'o')
-ax.plot(ts, z)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(xy_points, z_points,  'o', label='data')
-ax.plot(xy, z, 'x')
-ax.set_xlim(0.5, 2.5)
-plt.show()
-
-
-
-###
-
-
-
-
-T = 1.
-
-times = [0., T/4., T/2., 3.*T/4., T]
-
-xy_forward = 10.
-xy_backward = 0.
-xy_points = [xy_forward,  0.5*(xy_forward + xy_backward), xy_backward, 0.5*(xy_forward + xy_backward), xy_forward]
-
-z_up = 0.5
-z_down = 0.
-z_points = [z_down, z_down, z_down, z_up, z_down]
-
-cs_xy = CubicSpline(times, xy_points)
-cs_z = CubicSpline(times, z_points)
-
-
-ts = np.arange(0., T, 0.01)
-xy = cs_xy(ts)
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, xy_points, 'o')
-ax.plot(ts, xy)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-z = cs_z(ts)
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, z_points, 'o')
-ax.plot(ts, z)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(xy_points, z_points,  'o', label='data')
-ax.plot(xy, z, 'x')
-ax.set_xlim(-1., 12.)
-plt.show()
-
-
-
-
-
-class InterpolationFunction:
+class PositionPattern:
     
-    @classmethod     
-    def cubic(cls, t1, t2, x1, x2):
     
-        A = np.matrix([[t1**3, t1**2, t1, 1],
-                       [t2**3, t2**2, t2, 1],
-                       [3.*(t1**2), 2.*t1, 1., 0.],
-                       [3.*(t2**2), 2.*t2, 1., 0]])
+    def __init__(self, cursor_values, horizontal_values, vertical_values, cursor = 0., use_cubic_splines = False):
+        
+        self.cursor_values = cursor_values
+        self.horizontal_values = horizontal_values
+        self.vertical_values = vertical_values
+        
+        if use_cubic_splines:
+            interpol = CubicSpline
+        else:
+            interpol = InterpolationFunction 
+        
+        self.horizontal_interpol = interpol(cursor_values, horizontal_values)
+        self.vertical_interpol = interpol(cursor_values, vertical_values)
+        
+        self.cursor = cursor % 1.
+  
+    
+    def set_cursor(self, cursor):
+        self.cursor = cursor % 1.
+        
+        
+    def increase_cursor(self, dcursor):
+        self.cursor = (self.cursor + dcursor) % 1.
+        
+        
+    def __call__(self):
+        
+        horizontal_value = self.horizontal_interpol(self.cursor)
+        vertical_value = self.vertical_interpol(self.cursor)
        
-        b = np.array([x1, x2, 0., 0.]).reshape(4,1)
+        return [horizontal_value, vertical_value]
+
+
+    def plot(self, eps = 0.01):
         
-        return np.array(((A**-1)*b).reshape(1,4))[0]
-    
-
-    def __init__(self, ts, xs):
-    
-        self.ts = ts
-        self.xs = xs
-        self.polynomials = []
+        ts = np.arange(0., 1., eps)
+        horiz = [self.horizontal_interpol(t) for t in ts]
+        vert = [self.vertical_interpol(t) for t in ts]
         
-        for i in range(len(ts) - 1):
-            self.polynomials.append(InterpolationFunction.cubic(0., ts[i+1] - ts[i], xs[i], xs[i+1]))
-            print(self.polynomials)
-
-    def __call__(self, t):
+        fig, ax = plt.subplots(figsize=(6.5, 4))
+        ax.plot(self.cursor_values, self.horizontal_values, 'o')
+        ax.plot(ts, horiz)
+        ax.set_xlim(-0.1, 1.1)
+        plt.show()
         
-        t_index = 0
+        fig, ax = plt.subplots(figsize=(6.5, 4))
+        ax.plot(self.cursor_values, self.vertical_values, 'o')
+        ax.plot(ts, vert)
+        ax.set_xlim(-0.1, 1.1)
+        plt.show()
         
-        while t_index+1 < len(self.polynomials) and self.ts[t_index+1] < t:
-            t_index += 1
+        fig, ax = plt.subplots(figsize=(6.5, 4))
+        ax.plot(self.horizontal_values, self.vertical_values, 'o')
+        ax.plot(horiz, vert, 'x')
+        ax.set_xlim(min(horiz) - 1., max(horiz) + 1.)
+        plt.show()
+
         
-        return np.polyval(self.polynomials[t_index], t - self.ts[t_index])
+
+
+    @classmethod    
+    def position_pattern_v1(cls, horizontal_amplitude, vertical_amplitude, cursor = 0., use_cubic_splines = False):
         
-
-
-
-
-
-def position_order(front_coordinates, horizontal_amplitude, horizontal_angle, vertical_amplitude, period):
-    
-    times = [0., period/2., 3.*period/4., period]
-    horizontal_points = [0., -horizontal_amplitude, -horizontal_amplitude/2., 0.]
-    vertical_points = [0., 0., vertical_amplitude, 0.]
-    
-    horizontal_interpol = InterpolationFunction(times, horizontal_points)
-    vertical_interpol = InterpolationFunction(times, vertical_points)
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        cursor_values = [0., 1./2. , 3./4., 1.]
+        horizontal_values = [0., horizontal_amplitude, horizontal_amplitude/2., 0.]
+        vertical_values = [0., 0., vertical_amplitude, 0.]
+        
+        return PositionPattern(cursor_values, horizontal_values, vertical_values, cursor = cursor, use_cubic_splines = use_cubic_splines)
     
 
 
 
-T = 1.
 
-times = [0., T/2., 3.*T/4., T]
+class PositionCommand:
+    
+    def __init__(self, pattern, coordinates, horizontal_angle, period):
+        
+        self.pattern = pattern
+        self.coordinates = coordinates
+        self.cos_horizontal_angle = np.cos(horizontal_angle)
+        self.sin_horizontal_angle = np.sin(horizontal_angle)
+        self.period = period
+        self.last_call_time = time.time()
+
+
+    def set_period(self, period):
+        self.period = period
+        
+        
+    def set_coordinates(self, coordinates):
+        self.coordinates = coordinates
+        
+        
+    def set_horizontal_angle(self, horizontal_angle):
+        self.cos_horizontal_angle = np.cos(horizontal_angle)
+        self.sin_horizontal_angle = np.sin(horizontal_angle)
+        
+        
+    def reset_last_call_time(self):
+        self.last_call_time = time.time()
+        
+        
+    def next_command(self):
+        
+        current_time = time.time()
+        dcursor = (current_time - self.last_call_time) / self.period
+        self.last_call_time = current_time
+        self.pattern.increase_cursor(dcursor)
+        
+        horizontal_command, vertical_command = self.pattern()
+        
+        x_command = self.coordinates[0] + horizontal_command * self.cos_horizontal_angle
+        y_command = self.coordinates[1] + horizontal_command * self.sin_horizontal_angle
+        z_command = self.coordinates[2] + vertical_command
+        
+        return [x_command, y_command, z_command]
+
+
+ 
+    
+    
+pattern = PositionPattern.position_pattern_v1(10., 0.5)
+pattern.plot() 
+
+command = PositionCommand(pattern, [0.,0.,0.], 0., 2)
+
+start = time.time()
+nb_tests = 100000
+for i in range(nb_tests):
+    command.next_command()
+end = time.time()
+print "Time to compute one order : ", (end - start) / nb_tests
+
+   
+
+pattern_cubic = PositionPattern.position_pattern_v1(10.,0.5, use_cubic_splines = True)
+pattern_cubic.plot() 
+
+
+
+cursor_values = [0., 1./4., 1./2., 3./4., 1.]
 
 xy_forward = 10.
 xy_backward = 0.
-xy_points = [xy_forward, xy_backward, 0.5*(xy_forward + xy_backward), xy_forward]
+horizontal_values = [xy_forward,  0.5*(xy_forward + xy_backward), xy_backward, 0.5*(xy_forward + xy_backward), xy_forward]
 
 z_up = 0.5
 z_down = 0.
-z_points = [z_down, z_down, z_up, z_down]
-
-cs_xy = InterpolationFunction(times, xy_points)
-cs_z = InterpolationFunction(times, z_points)
+vertical_values = [z_down, z_down, z_down, z_up, z_down]
 
 
-ts = np.arange(0., T, 0.01)
-xy = [cs_xy(t) for t in ts]
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, xy_points, 'o')
-ax.plot(ts, xy)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-z = [cs_z(t) for t in ts]
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(times, z_points, 'o')
-ax.plot(ts, z)
-ax.set_xlim(-0.5, 1.1*T)
-plt.show()
-
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(xy_points, z_points,  'o', label='data')
-ax.plot(xy, z, 'x')
-ax.set_xlim(-1., 12.)
-plt.show() 
+pattern_test = PositionPattern(cursor_values, horizontal_values, vertical_values, use_cubic_splines = True)
+pattern_test.plot()    
