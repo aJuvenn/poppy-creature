@@ -54,6 +54,51 @@ while (1):
     
     
     
+    
+    
+jr.compliant = False
+
+
+command_freq = 20.
+dt = 1. / command_freq
+
+horiz_amp = 7.
+vert_amp = 2.5
+x0 = 3.
+z0 = -8
+y0_front = 9.
+y0_back = 2.
+T = 1.
+
+
+patternFL = PositionPattern.position_pattern_v1(horiz_amp, vert_amp)
+commandFL = PositionCommand(patternFL, [x0, y0_front, z0], -np.pi/2., T)
+
+patternBL = PositionPattern.position_pattern_v1(horiz_amp, vert_amp, cursor = 0.5)
+commandBL = PositionCommand(patternBL, [x0, y0_back, z0], -np.pi/2., T)
+
+patternBR = PositionPattern.position_pattern_v1(horiz_amp, vert_amp)
+commandBR = PositionCommand(patternBR, [x0, y0_back, z0], -np.pi/2., T)
+
+patternFR = PositionPattern.position_pattern_v1(horiz_amp, vert_amp, cursor = 0.5)
+commandFR = PositionCommand(patternFR, [x0, y0_front, z0], -np.pi/2., T)
+
+
+while (1):
+    x, y, z = commandFL.next_command()
+    FL_leg.set_position(x, y, z, duration = dt)
+    
+    x, y, z = commandBL.next_command()
+    BL_leg.set_position(x, y, z, duration = dt)
+    
+    x, y, z = commandBR.next_command()
+    BR_leg.set_position(x, y, z, duration = dt)
+    
+    x, y, z = commandFR.next_command()
+    FR_leg.set_position(x, y, z, duration = dt)
+    
+    time.sleep(dt)
+    
 
 
 

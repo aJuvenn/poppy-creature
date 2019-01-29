@@ -23,9 +23,9 @@ def radian_to_degree(theta):
 
 class PoppyLeg:
     
-    R = 0.5
-    L = 0.9
-    D = 1.5
+    R = 4.7 #cm
+    L = 5.6 #cm
+    D = 11.1 #cm
     L_squared = L * L
     D_squared = D * D
     
@@ -38,10 +38,10 @@ class PoppyLeg:
 
     def MGD(self, theta, phi, psi):
         
-        tmp = self.R + self.L * np.cos(phi) + self.D * np.cos(phi + psi)
+        tmp = PoppyLeg.R + PoppyLeg.L * np.cos(phi) + PoppyLeg.D * np.cos(phi + psi)
         x = tmp * np.cos(theta)
         y = tmp * np.sin(theta)
-        z = self.L * np.sin(phi) + self.D * np.sin(phi + psi)
+        z = PoppyLeg.L * np.sin(phi) + PoppyLeg.D * np.sin(phi + psi)
         
         return [x, y, z]
     
@@ -56,7 +56,7 @@ class PoppyLeg:
         
         K = np.sqrt(K_squared)
         
-        psi = - secure_arccos((K_squared - PoppyLeg.L_squared - PoppyLeg.D_squared) / (2. * PoppyLeg.L_squared * PoppyLeg.D_squared))
+        psi = - secure_arccos((K_squared - PoppyLeg.L_squared - PoppyLeg.D_squared) / (2. * PoppyLeg.L * PoppyLeg.D))
 
         if (K == 0.):
             return [theta, 0., psi]

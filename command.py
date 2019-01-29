@@ -5,25 +5,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 from interpolation import InterpolationFunction
-from scipy.interpolate import CubicSpline
-
 
 class PositionPattern:
     
     
-    def __init__(self, cursor_values, horizontal_values, vertical_values, cursor = 0., use_cubic_splines = False):
+    def __init__(self, cursor_values, horizontal_values, vertical_values, cursor = 0., use_linear = False):
         
         self.cursor_values = cursor_values
         self.horizontal_values = horizontal_values
         self.vertical_values = vertical_values
-        
-        if use_cubic_splines:
-            interpol = CubicSpline
-        else:
-            interpol = InterpolationFunction 
-        
-        self.horizontal_interpol = interpol(cursor_values, horizontal_values)
-        self.vertical_interpol = interpol(cursor_values, vertical_values)
+
+        self.horizontal_interpol = InterpolationFunction(cursor_values, horizontal_values, use_linear = use_linear)
+        self.vertical_interpol = InterpolationFunction(cursor_values, vertical_values, use_linear = use_linear)
         
         self.cursor = cursor % 1.
   
@@ -72,13 +65,13 @@ class PositionPattern:
 
 
     @classmethod    
-    def position_pattern_v1(cls, horizontal_amplitude, vertical_amplitude, cursor = 0., use_cubic_splines = False):
+    def position_pattern_v1(cls, horizontal_amplitude, vertical_amplitude, cursor = 0., use_linear = False):
         
         cursor_values = [0., 1./2. , 3./4., 1.]
         horizontal_values = [0., horizontal_amplitude, horizontal_amplitude/2., 0.]
         vertical_values = [0., 0., vertical_amplitude, 0.]
         
-        return PositionPattern(cursor_values, horizontal_values, vertical_values, cursor = cursor, use_cubic_splines = use_cubic_splines)
+        return PositionPattern(cursor_values, horizontal_values, vertical_values, cursor = cursor, use_linear = use_linear)
     
 
 

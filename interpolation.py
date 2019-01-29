@@ -23,9 +23,19 @@ class InterpolationFunction:
         b = np.array([x1, x2, 0., 0.]).reshape(4,1)
         
         return np.array(((A**-1)*b).reshape(1,4))[0]
-    
 
-    def __init__(self, ts, xs):
+    @classmethod
+    def linear(cls, t1, t2, x1, x2):
+        
+        A = np.matrix([[t1, 1],
+                       [t2, 1]])
+    
+        b = np.array([x1, x2]).reshape(2,1)
+
+        return np.array(((A**-1)*b).reshape(1,2))[0]
+
+
+    def __init__(self, ts, xs, use_linear = False):
         """
             Creates a new interpolation function f such as f(ts[i]) = xs[i]
             and f'(ts[i]) = 0. 
@@ -36,8 +46,13 @@ class InterpolationFunction:
         self.xs = xs
         self.polynomials = []
         
+        if use_linear:
+            interp_func = InterpolationFunction.linear
+        else:
+            interp_func = InterpolationFunction.cubic
+        
         for i in range(len(ts) - 1):
-            self.polynomials.append(InterpolationFunction.cubic(0., ts[i+1] - ts[i], xs[i], xs[i+1]))
+            self.polynomials.append(interp_func(0., ts[i+1] - ts[i], xs[i], xs[i+1]))
 
 
     def __call__(self, t):
