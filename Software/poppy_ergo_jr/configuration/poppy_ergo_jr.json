@@ -1,0 +1,246 @@
+{
+  "controllers": {
+    "my_dxl_controller": {
+      "sync_read": true,
+      "protocol": 2,
+      "attached_motors": [
+        "base",
+        "tip",
+        "front_left",
+        "back_left",
+        "back_right",
+        "front_right"
+      ],
+      "port": "/dev/ttyAMA0",
+      "syncloop": "LightDxlController"
+    }
+  },
+  "motorgroups": {
+    "base": [
+      "m1",
+      "m2",
+      "m3"
+    ],
+    "tip": [
+      "m4",
+      "m5",
+      "m6"
+    ],
+    "front_left": [
+      "m7",
+      "m8",
+      "m9"
+    ],
+    "back_left": [
+      "m10",
+      "m11",
+      "m12"
+    ],
+    "back_right": [
+      "m13",
+      "m14",
+      "m15"
+    ],
+    "front_right": [
+      "m16",
+      "m17",
+      "m18"
+    ]
+  },
+  "motors": {
+    "m1": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 1,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m2": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 2,
+      "angle_limit": [
+        -90.0,
+        125.0
+      ],
+      "orientation": "indirect"
+    },
+    "m3": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 3,
+      "angle_limit": [
+        -90.0,
+        90.0
+      ],
+      "orientation": "indirect"
+    },
+    "m4": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 4,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m5": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 5,
+      "angle_limit": [
+        -90.0,
+        90.0
+      ],
+      "orientation": "indirect"
+    },
+    "m6": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 6,
+      "angle_limit": [
+        -110.0,
+        90.0
+      ],
+      "orientation": "indirect"
+    },
+    "m7": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 7,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m8": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 8,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m9": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 9,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "indirect"
+    },
+    "m10": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 10,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m11": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 11,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m12": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 12,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "indirect"
+    },
+    "m13": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 13,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "indirect"
+    },
+    "m14": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 14,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m15": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 15,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "indirect"
+    },
+    "m16": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 16,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "indirect"
+    },
+    "m17": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 17,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "direct"
+    },
+    "m18": {
+      "offset": 0.0,
+      "type": "XL-320",
+      "id": 18,
+      "angle_limit": [
+        -150.0,
+        150.0
+      ],
+      "orientation": "indirect"
+    }
+  },
+  "sensors": {
+    "camera": {
+      "type": "OpenCVCamera",
+      "index": -1,
+      "fps": 20.0,
+      "resolution": [640, 480]
+    },
+    "marker_detector": {
+      "type": "MarkerDetector",
+      "cameras": ["camera"],
+      "freq": 1.0,
+      "need_robot": true
+    }
+  }
+}
